@@ -1,7 +1,7 @@
 on: push
 jobs:
   build-node:
-    runs-on: obunto-latest
+    runs-on: ubuntu-latest
     container: node:14
     steps:
       - run: node --version
