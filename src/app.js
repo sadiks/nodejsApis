@@ -2,6 +2,8 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 const { cors: corsConfig } = require('./config');
 const { defaultLimiter } = require('./middleware/rateLimiter');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
@@ -9,10 +11,10 @@ const routes = require('./routes');
 
 const app = express();
 
-// ── Security headers ──────────────────────────────────────────────
-app.use(helmet());
+// ── Security headers (relaxed for Swagger UI) ─────────────────────
+app.use(helmet({ contentSecurityPolicy: false }));
 
-// ── CORS — restrict to registered MFE origins ────────────────────
+// ── CORS ──────────────────────────────────────────────────────────
 app.use(cors({
   origin: corsConfig.origin,
   credentials: true,
@@ -31,6 +33,25 @@ if (process.env.NODE_ENV !== 'test') {
 
 // ── Global rate limiter ───────────────────────────────────────────
 app.use(defaultLimiter);
+
+// ── Swagger UI ────────────────────────────────────────────────────
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customSiteTitle: 'BFF API Docs',
+  customCss: `
+    .swagger-ui .topbar { background-color: #1B3A5C; }
+    .swagger-ui .topbar .download-url-wrapper { display: none; }
+    .swagger-ui .info .title { color: #1B3A5C; }
+  `,
+  swaggerOptions: {
+    persistAuthorization: true,
+    displayRequestDuration: true,
+    docExpansion: 'list',
+    filter: true,
+  },
+}));
+
+// ── Swagger JSON spec (for import into Postman etc.) ─────────────
+app.get('/api/docs.json', (req, res) => res.json(swaggerSpec));
 
 // ── API routes ────────────────────────────────────────────────────
 app.use('/api', routes);

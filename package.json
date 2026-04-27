@@ -11,26 +11,34 @@
     "lint": "eslint src/ tests/"
   },
   "keywords": [
-    "nodejs", "express", "bff", "backend-for-frontend",
-    "jwt", "rest-api", "microservices", "aggregation"
+    "nodejs",
+    "express",
+    "bff",
+    "backend-for-frontend",
+    "jwt",
+    "rest-api",
+    "microservices",
+    "aggregation"
   ],
   "author": "Mohamed Sadikul Ameen",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
+    "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
-    "express-rate-limit": "^7.1.5",
-    "helmet": "^7.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "axios": "^1.6.2"
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "supertest": "^6.3.3",
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.0.2",
+    "supertest": "^6.3.3"
   },
   "jest": {
     "testEnvironment": "node",
@@ -40,7 +48,11 @@
       "!src/server.js"
     ],
     "coverageThreshold": {
-      "global": { "branches": 70, "functions": 70, "lines": 70 }
+      "global": {
+        "branches": 70,
+        "functions": 70,
+        "lines": 70
+      }
     }
   }
 }
