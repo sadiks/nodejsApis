@@ -1,3 +1,31 @@
 .vscode/
 node_modules/
 package-lock.json
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# OS-specific files
+.DS_Store
+
+# Coverage reports
+coverage/
+
+# Build artifacts
+dist/
+
+# Docker
+*.container
+*.tar
+
+# IDE-specific files
+.idea/
+*.sublime-workspace
+*.sublime-project
