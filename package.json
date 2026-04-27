@@ -1,9 +1,46 @@
 {
-    "name": "node-hello",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-      "start": "node index.js"
+  "name": "nodejs-bff-api",
+  "version": "2.0.0",
+  "description": "Backend for Frontend (BFF) API — aggregates downstream microservices for React MFE clients. Demonstrates JWT auth, rate limiting, structured error handling, and service aggregation patterns.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/ tests/"
+  },
+  "keywords": [
+    "nodejs", "express", "bff", "backend-for-frontend",
+    "jwt", "rest-api", "microservices", "aggregation"
+  ],
+  "author": "Mohamed Sadikul Ameen",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "morgan": "^1.10.0",
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "nodemon": "^3.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/server.js"
+    ],
+    "coverageThreshold": {
+      "global": { "branches": 70, "functions": 70, "lines": 70 }
     }
   }
+}
