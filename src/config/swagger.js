@@ -36,7 +36,7 @@ in parallel (\`Promise.allSettled\`) and returns one composed payload.
     },
     servers: [
       { url: 'http://localhost:3000', description: 'Local development' },
-      { url: 'https://sadik-bff-api.onrender.com', description: 'Production (Render)' },
+      { url: 'https://sadik-bff-api.up.railway.app', description: 'Production (Render)' },
     ],
     components: {
       securitySchemes: {
