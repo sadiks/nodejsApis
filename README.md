@@ -1,16 +1,16 @@
 # Node.js BFF (Backend for Frontend) API
 
 [![CI](https://github.com/sadiks/nodejsApis/actions/workflows/ci.yml/badge.svg)](https://github.com/sadiks/nodejsApis/actions)
-[![Live](https://img.shields.io/badge/Live-Railway-blueviolet)](https://sadik-bff-api.up.railway.app/api/health)
-[![Swagger](https://img.shields.io/badge/Docs-Swagger%20UI-green)](https://sadik-bff-api.up.railway.app/api/docs)
+[![Live](https://img.shields.io/badge/Live-Vercel-blueviolet)](https://sadik-bff-api.vercel.app/api/health)
+[![Swagger](https://img.shields.io/badge/Docs-Swagger%20UI-green)](https://sadik-bff-api.vercel.app/api/docs)
 ![Node.js](https://img.shields.io/badge/Node.js-20.x-green)
 ![Express](https://img.shields.io/badge/Express-4.x-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 A production-grade **Backend for Frontend (BFF)** API built with Node.js and Express. Demonstrates the BFF architectural pattern — aggregating multiple downstream microservices into a single, UI-optimised response for React Micro Frontend (MFE) clients.
 
-🚀 **Live API:** https://sadik-bff-api.up.railway.app/api/health  
-📖 **Swagger Docs:** https://sadik-bff-api.up.railway.app/api/docs
+🚀 **Live API:** https://sadik-bff-api.vercel.app/api/health  
+📖 **Swagger Docs:** https://sadik-bff-api.vercel.app/api/docs
 
 ---
 
@@ -43,19 +43,19 @@ Service  Service  Service
 
 | Endpoint | URL |
 |----------|-----|
-| Health Check | https://sadik-bff-api.up.railway.app/api/health |
-| Swagger UI | https://sadik-bff-api.up.railway.app/api/docs |
-| OpenAPI JSON | https://sadik-bff-api.up.railway.app/api/docs.json |
+| Health Check | https://sadik-bff-api.vercel.app/api/health |
+| Swagger UI | https://sadik-bff-api.vercel.app/api/docs |
+| OpenAPI JSON | https://sadik-bff-api.vercel.app/api/docs.json |
 
 ### Try it in one curl:
 ```bash
 # 1. Login
-curl -X POST https://sadik-bff-api.up.railway.app/api/auth/login \
+curl -X POST https://sadik-bff-api.vercel.app/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"alice@example.com","password":"password123"}'
 
 # 2. Use the token from above
-curl https://sadik-bff-api.up.railway.app/api/dashboard/u1 \
+curl https://sadik-bff-api.vercel.app/api/dashboard/u1 \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
@@ -253,9 +253,9 @@ For local development and live demo only:
 
 ## Deployment
 
-Hosted on **Railway** with auto-deploy on every push to `master`.
+Hosted on **Vercel** with automatic deployments.
 
-Config: `railway.toml` — uses Nixpacks builder, health check on `/api/health`.
+Config: `vercel.json` — uses Vercel Node serverless functions for `/api/*`.
 
 ---
 
