@@ -8,10 +8,10 @@ module.exports = (req, res) => {
   const normalizedUrl = incoming.startsWith('/') ? incoming : `/${incoming}`;
   const parsed = new URL(normalizedUrl, 'http://localhost');
 
-  const slugKey = ['__slug', '_slug', 'slug'].find((key) => parsed.searchParams.has(key));
+  const slugKey = ['...slug', '__slug', '_slug', 'slug'].find((key) => parsed.searchParams.has(key));
   if (slugKey) {
     const slugValue = parsed.searchParams.get(slugKey) || '';
-    parsed.searchParams.delete(slugKey);
+    ['...slug', '__slug', '_slug', 'slug'].forEach((key) => parsed.searchParams.delete(key));
     parsed.pathname = `/api/${slugValue.replace(/^\/+|\/+$/g, '')}`;
   }
 
