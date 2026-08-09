@@ -2,30 +2,36 @@ const { URL } = require('url');
 const app = require('../src/app');
 
 // Vercel routes requests for /api/* to this catch-all function.
-// We normalize the incoming URL so Express always sees /api/... paths.
+// Normalize incoming paths so Express always receives /api/... URLs.
 module.exports = (req, res) => {
   const incoming = req.url || req.originalUrl || '/';
   const normalizedUrl = incoming.startsWith('/') ? incoming : `/${incoming}`;
-  const parsed = new URL(normalizedUrl, 'http://localhost');
+  let reqUrl = normalizedUrl;
 
-  const slugKey = ['...slug', '__slug', '_slug', 'slug'].find((key) => parsed.searchParams.has(key));
-  if (slugKey) {
-    const slugValue = parsed.searchParams.get(slugKey) || '';
-    ['...slug', '__slug', '_slug', 'slug'].forEach((key) => parsed.searchParams.delete(key));
-    parsed.pathname = `/api/${slugValue.replace(/^\/+|\/+$/g, '')}`;
+  try {
+    const parsed = new URL(normalizedUrl, 'http://localhost');
+    const slugKey = ['...slug', '__slug', '_slug', 'slug'].find((key) => parsed.searchParams.has(key));
+
+    if (slugKey) {
+      const slugValue = parsed.searchParams.get(slugKey) || '';
+      ['...slug', '__slug', '_slug', 'slug'].forEach((key) => parsed.searchParams.delete(key));
+      parsed.pathname = `/api/${slugValue.replace(/^\/+|\/+$/g, '')}`;
+    }
+
+    if (!parsed.pathname.startsWith('/api')) {
+      parsed.pathname = `/api${parsed.pathname}`;
+    }
+
+    const query = parsed.searchParams.toString();
+    reqUrl = query ? `${parsed.pathname}?${query}` : parsed.pathname;
+  } catch (error) {
+    if (!reqUrl.startsWith('/api')) {
+      reqUrl = `/api${reqUrl}`;
+    }
   }
 
-  let pathname = parsed.pathname || '/';
-  if (!pathname.startsWith('/api')) {
-    pathname = pathname.replace(/^\/+/, '');
-    pathname = `/api/${pathname}`.replace(/\/+/g, '/');
-  }
-
-  const query = parsed.searchParams.toString();
-  req.url = query ? `${pathname}?${query}` : pathname;
-  if (req.originalUrl !== undefined) {
-    req.originalUrl = req.url;
-  }
+  req.url = reqUrl;
+  req.originalUrl = reqUrl;
 
   return app(req, res);
 };

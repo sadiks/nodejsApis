@@ -29,3 +29,5 @@ dist/
 .idea/
 *.sublime-workspace
 *.sublime-project
+.vercel
+.env*.local
