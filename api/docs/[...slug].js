@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const app = require('../src/app');
+const app = require('../../src/app');
+
+// Resolve swagger-ui-dist install location if available
 const swaggerDist = (() => {
   try {
-    // swagger-ui-dist exposes the dist path via getAbsoluteFSPath()
     const distPkg = require('swagger-ui-dist');
     return distPkg.getAbsoluteFSPath ? distPkg.getAbsoluteFSPath() : path.dirname(require.resolve('swagger-ui-dist'));
   } catch (err) {
@@ -11,31 +12,26 @@ const swaggerDist = (() => {
   }
 })();
 
-// Serve a small set of Swagger UI static assets directly from swagger-ui-dist
-// when running on Vercel. This avoids Vercel returning 404 for asset requests
-// that otherwise might not be routed into the Express app correctly.
 const ASSET_MAP = {
   'swagger-ui.css': 'text/css',
   'swagger-ui-bundle.js': 'application/javascript',
   'swagger-ui-standalone-preset.js': 'application/javascript',
   'swagger-ui-init.js': 'application/javascript',
+  'swagger-ui-init.js.map': 'application/json',
   'favicon-32x32.png': 'image/png',
   'favicon-16x16.png': 'image/png',
 };
 
 module.exports = (req, res) => {
   const incoming = req.url || req.originalUrl || '/';
-  const [pathOnly, query] = incoming.split('?');
-  const normalizedPath = pathOnly.startsWith('/') ? pathOnly : `/${pathOnly}`;
-
-  // If the request targets a known Swagger UI asset, serve it directly.
-  const assetName = Object.keys(ASSET_MAP).find((name) => normalizedPath.endsWith(name));
+  // If request contains a known asset filename, attempt to serve it from swaggerDist
+  const assetName = Object.keys(ASSET_MAP).find((name) => incoming.includes(name));
   if (assetName && swaggerDist) {
     const filePath = path.join(swaggerDist, assetName);
     if (fs.existsSync(filePath)) {
       res.setHeader('Content-Type', ASSET_MAP[assetName]);
       const stream = fs.createReadStream(filePath);
-      stream.on('error', (err) => {
+      stream.on('error', () => {
         res.statusCode = 500;
         res.end('Internal Server Error');
       });
@@ -50,12 +46,10 @@ module.exports = (req, res) => {
     return res.writeHead(302, { Location: cdnUrl }).end();
   }
 
-  // Preserve any sub-paths under /docs (e.g., /api/docs/swagger-initializer.js)
-  const rest = normalizedPath.replace(/^\/docs|^\/api\/docs/, '');
-  const forwardPath = `/api/docs${rest || ''}${query ? `?${query}` : ''}`;
-
-  req.url = forwardPath;
-  req.originalUrl = forwardPath;
-
+  // Forward everything else into the Express app
+  // Normalize path to ensure Express receives /api/docs/... paths
+  const normalized = incoming.startsWith('/') ? incoming : `/${incoming}`;
+  req.url = normalized;
+  req.originalUrl = normalized;
   return app(req, res);
 };
