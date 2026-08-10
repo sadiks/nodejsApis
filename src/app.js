@@ -35,6 +35,7 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(defaultLimiter);
 
 // ── Swagger UI ────────────────────────────────────────────────────
+// Mount Swagger UI at /api/docs (Vercel routes all /api/* to api/[...slug].js)
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customSiteTitle: 'BFF API Docs',
   customCss: `
