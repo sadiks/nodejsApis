@@ -6,9 +6,5 @@
       "maxDuration": 10
     }
   }
-  ,
-  "rewrites": [
-    { "source": "/docs/:match*", "destination": "/api/docs/:match*" },
-    { "source": "/docs", "destination": "/api/docs" }
-  ]
+  
 }
